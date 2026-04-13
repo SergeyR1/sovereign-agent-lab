@@ -1,0 +1,43 @@
+# config.yml
+#
+# WHY THIS LOOKS DIFFERENT FROM OLD RASA TUTORIALS
+# -------------------------------------------------
+# This project uses Rasa Pro CALM (Conversational AI with Language Models).
+# CALM replaces the old NLU pipeline + rules + forms with a much simpler
+# two-component architecture:
+#
+#   CompactLLMCommandGenerator
+#     Reads the user's message and the descriptions of all available flows.
+#     Uses an LLM to decide which flow to start or which slot to fill.
+#     No intent classification. No training examples. Just descriptions.
+#
+#   FlowPolicy
+#     Executes the flow steps once the LLM has decided what to do.
+#     Deterministic: if the flow says "collect: guest_count", it collects
+#     guest_count — no ML involved. The LLM only decides WHICH flow,
+#     not HOW to execute it.
+#
+# This separation is the key insight:
+#   LLM = flexible understanding of natural language
+#   Flows = deterministic, auditable business logic
+#
+# There is no nlu.yml and no rules.yml. Those are not needed in CALM.
+
+recipe: default.v1
+language: en
+
+assistant_id: edinburgh_booking_agent
+
+pipeline:
+  - name: CompactLLMCommandGenerator
+    llm:
+      model_group: nebius_llm
+    flow_retrieval:
+      embeddings:
+        model_group: nebius_embeddings
+    # Raise the input character limit — voice transcripts can be verbose.
+    user_input:
+      max_characters: 2000
+
+policies:
+  - name: FlowPolicy

@@ -1,0 +1,78 @@
+# data/flows.yml
+#
+# WHAT THIS FILE IS
+# -----------------
+# In Rasa Pro CALM, flows replace BOTH nlu.yml AND rules.yml.
+#
+# A flow is a description of a task the assistant can perform,
+# plus the steps required to complete it.
+#
+# The LLM reads the flow *description* to decide which flow to trigger.
+# It does not need training examples. It does not need intent labels.
+# The description IS the signal — write it the way you'd explain the task
+# to a smart assistant: "what does this flow do, and when should it start?"
+#
+# HOW IT COMPARES TO THE LANGGRAPH AGENT (EXERCISE 2)
+# -----------------------------------------------------
+# Compare this file to the Mermaid output from `make ex2-d`.
+#
+# LangGraph (research agent):
+#   One loop node. The model decides what to do at every step.
+#   The graph you see is just the loop — all routing is implicit.
+#
+# Rasa CALM (confirmation agent):
+#   This file. Every possible flow is written explicitly here.
+#   The LLM only decides WHICH flow to start. After that, Rasa
+#   executes the steps deterministically.
+#
+# This is the trade-off:
+#   LangGraph  → flexible, but you can't predict every path
+#   Rasa CALM  → explicit flows, every path is readable and auditable
+#
+# SLOT COLLECTION
+# ---------------
+# When a flow hits a `collect:` step, Rasa asks the user for that slot
+# using `utter_ask_{slot_name}` from domain.yml.
+# The LLM then extracts the value from whatever the user says.
+# No regex. No validation class. "About 160 people" → 160.0 automatically.
+
+flows:
+
+  # ── Main booking confirmation flow ────────────────────────────────────────
+  confirm_booking:
+    description: >
+      Handle an inbound call from a pub manager confirming a venue booking
+      for tonight's event.
+      Triggered when the pub manager calls to confirm booking details,
+      including guest count, dietary requirements, and deposit terms.
+      This is the primary task — all booking-related calls should use this flow.
+    steps:
+      # CALM collects these slots in order.
+      # For each slot, Rasa uses utter_ask_{slot_name} to ask the question.
+      # The LLM extracts the value from whatever the user says naturally.
+
+      - collect: guest_count
+        description: "total number of guests attending tonight's event"
+
+      - collect: vegan_count
+        description: "number of guests requiring vegan meals"
+
+      - collect: deposit_amount_gbp
+        description: "deposit amount in GBP the manager is proposing to secure the booking"
+
+      # Once all three slots are collected, run the validation action.
+      # This is where Rod's business constraints live — in Python, not in a prompt.
+      # See actions/actions.py for the constraint logic.
+      - action: action_validate_booking
+
+  # ── Out-of-scope deflection ───────────────────────────────────────────────
+  # When the manager asks about something outside the booking (parking,
+  # AV equipment, menus, etc.), this flow triggers.
+  # CALM's LLM recognises off-topic requests and routes here automatically.
+  handle_out_of_scope:
+    description: >
+      Handle requests that are outside the scope of booking confirmation,
+      such as questions about parking, AV equipment, seating arrangements,
+      menus, weather, or any non-booking topic.
+    steps:
+      - action: utter_out_of_scope

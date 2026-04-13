@@ -1,0 +1,79 @@
+{
+  "model_main": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt/rc",
+  "model_small": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt-lite/latest",
+  "part_a": {
+    "PLAIN": {
+      "answer": "The Haymarket Vaults",
+      "tokens": 181,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt/rc",
+      "correct": true,
+      "condition": "PLAIN"
+    },
+    "XML": {
+      "answer": "The Albanach",
+      "tokens": 263,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt/rc",
+      "correct": true,
+      "condition": "XML"
+    },
+    "SANDWICH": {
+      "answer": "The Albanach",
+      "tokens": 306,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt/rc",
+      "correct": true,
+      "condition": "SANDWICH"
+    }
+  },
+  "part_b": {
+    "PLAIN": {
+      "answer": "The Haymarket Vaults",
+      "tokens": 220,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt/rc",
+      "correct": true,
+      "condition": "PLAIN"
+    },
+    "XML": {
+      "answer": "The Albanach",
+      "tokens": 322,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt/rc",
+      "correct": true,
+      "condition": "XML"
+    },
+    "SANDWICH": {
+      "answer": "The Albanach",
+      "tokens": 365,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt/rc",
+      "correct": true,
+      "condition": "SANDWICH"
+    }
+  },
+  "part_c_was_run": true,
+  "part_c": {
+    "PLAIN": {
+      "answer": "The Ensign Ewart\nThe Haymarket Vaults\nThe New Town Vault\nThe Albanach",
+      "tokens": 236,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt-lite/latest",
+      "correct": true,
+      "condition": "PLAIN"
+    },
+    "XML": {
+      "answer": "The Haymarket Vaults",
+      "tokens": 323,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt-lite/latest",
+      "correct": true,
+      "condition": "XML"
+    },
+    "SANDWICH": {
+      "answer": "The Haymarket Vaults",
+      "tokens": 366,
+      "model": "gpt://b1gtkudt8svhsmdtbeop/yandexgpt-lite/latest",
+      "correct": true,
+      "condition": "SANDWICH"
+    }
+  },
+  "summary": {
+    "part_a_all_correct": true,
+    "part_b_all_correct": true,
+    "structural_effect_seen_in": "none_see_part_c"
+  }
+}

@@ -1,0 +1,41 @@
+[project]
+name = "sovereign-agent-rasa"
+version = "0.1.0"
+description = "Edinburgh booking confirmation agent — Rasa Pro CALM"
+# Rasa Pro 3.9+ supports Python 3.10 and 3.11.
+# uv reads this and picks the right Python version automatically.
+requires-python = ">=3.10,<3.12"
+dependencies = [
+    # Rasa Pro — includes CALM, CompactLLMCommandGenerator, FlowPolicy.
+    # Requires RASA_PRO_LICENSE env var to be set.
+    # Your instructor will provide a licence for the course.
+    "rasa-pro>=3.9.0",
+    # The SDK is always installed separately from the Rasa core.
+    # Your custom actions in actions/actions.py import from rasa_sdk.
+    "rasa-sdk>=3.8.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+dev = [
+    "ruff>=0.1.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["actions"]
+
+[tool.uv]
+# uv manages this environment independently from the main sovereign_agent env.
+# Run `uv sync` from inside exercise3_rasa/ to set up.
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+exclude = [".venv", ".rasa", "models", "__pycache__"]

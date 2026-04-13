@@ -1,0 +1,7 @@
+The Albanach,capacity=180,vegan=yes,status=available,address=2 Hunter Square Edinburgh
+The Bow Bar,capacity=80,vegan=yes,status=full,address=80 West Bow Edinburgh
+The Guilford Arms,capacity=200,vegan=no,status=available,address=1 West Register Street Edinburgh
+The Hanging Bat,capacity=70,vegan=yes,status=available,address=133 Lothian Road Edinburgh
+The Grain Store,capacity=170,vegan=no,status=available,address=30 Victoria Street Edinburgh
+The Haymarket Vaults,capacity=160,vegan=yes,status=available,address=1 Dalry Road Edinburgh
+The Ensign Ewart,capacity=120,vegan=yes,status=available,address=521 Lawnmarket Edinburgh

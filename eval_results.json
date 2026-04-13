@@ -1,0 +1,32 @@
+{
+  "mode": "dry_run",
+  "tasks_validated": 5,
+  "all_valid": true,
+  "validations": [
+    {
+      "id": 1,
+      "valid": true,
+      "missing_fields": []
+    },
+    {
+      "id": 2,
+      "valid": true,
+      "missing_fields": []
+    },
+    {
+      "id": 3,
+      "valid": true,
+      "missing_fields": []
+    },
+    {
+      "id": 4,
+      "valid": true,
+      "missing_fields": []
+    },
+    {
+      "id": 5,
+      "valid": true,
+      "missing_fields": []
+    }
+  ]
+}

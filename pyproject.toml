@@ -1,0 +1,61 @@
+[project]
+name = "sovereign-agent-lab"
+version = "0.1.0"
+description = "Build your Sovereign Agent — LangGraph automator or Rasa digital employee"
+requires-python = ">=3.12"
+dependencies = [
+    # Nebius / OpenAI-compatible client
+    "openai>=1.30.0",
+    # Environment variable loading (.env files)
+    "python-dotenv>=1.0.0",
+    # HTTP calls (weather API, external services)
+    "requests>=2.31.0",
+    # LangGraph — the agent loop framework used in Exercise 2
+    "langgraph>=0.2.0",
+    "langchain-openai>=0.1.0",
+    "langchain-core>=0.2.0",
+    # MCP — Model Context Protocol, used in Exercise 4
+    "mcp[cli]>=1.0.0",
+]
+
+[project.optional-dependencies]
+test = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+dev = [
+    "ruff>=0.9.0",
+]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+# Explicit package list so the build system knows what to include.
+# sovereign_agent is the persistent agent project that grows each week.
+packages = ["sovereign_agent", "sovereign_agent.tools", "sovereign_agent.agents", "sovereign_agent.tests"]
+
+[tool.uv]
+# uv manages the virtual environment. Run `uv sync` to create it.
+# Run `uv sync --extra test` to also install pytest.
+dev-dependencies = [
+    "pytest>=8.0.0",
+    "ruff>=0.9.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["sovereign_agent/tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = ["-v", "--tb=short"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+exclude = [".venv", "__pycache__", "exercise3_rasa"]
+
+[tool.ruff.lint]
+# E = pycodestyle errors  F = pyflakes  I = isort
+select = ["E", "F", "I"]
