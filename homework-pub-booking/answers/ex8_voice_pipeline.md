@@ -2,29 +2,41 @@
 
 ## Your answer
 
-The voice pipeline has two modes with shared trace-event contract:
-text mode (run_text_mode, shipped complete) reads stdin and the
-manager persona replies via Llama-3.3-70B; voice mode (run_voice_mode,
-implemented here) uses Speechmatics for STT.
+Я гонял Ex8 в `--text`-режиме (без Speechmatics/Rime — оба ключа платные,
+а голосовой контракт от этого не страдает). Архитектурно pipeline
+устроен из двух режимов, разделяющих один и тот же контракт
+trace-событий: `voice` (микрофон → Speechmatics STT → ManagerPersona →
+Rime TTS → динамик) и `text` (stdin → ManagerPersona → stdout). Оба
+гонят одни и те же события через `session.append_trace_event()`:
+`user_input`, `manager_thinking`, `manager_response`,
+`handoff_to_loop`, что и проверяет публичный тест
+`test_text_mode_appends_trace_events`.
 
-The critical design choice is graceful degradation. run_voice_mode
-checks SPEECHMATICS_KEY and the speechmatics-python import before
-doing anything else. If either is missing, it logs a warning and
-falls through to run_text_mode. This means CI can pass the "voice
-loop implemented" check without Speechmatics credentials — the same
-code runs, just under the simpler transport.
+`ManagerPersona` — это тонкая обёртка над LLM (на Nebius планируется
+`Llama-3.3-70B-Instruct`, fallback — Yandex `yandexgpt`). Системный
+промпт описывает её как менеджера площадки, который ведёт
+короткий диалог по сбору параметров брони — площадка, дата, время,
+размер группы, бюджет — и **не считает сам**, а делает handoff в
+loop half, как только данных хватает. Тест
+`test_manager_system_prompt_mentions_rules` как раз проверяет, что
+в промпт зашиты эти правила. Это хороший пример separation of
+concerns: LLM-разговор отвечает за UX, loop+structured — за факты
+и валидацию, а голос — отдельный транспортный слой поверх.
 
-Both modes emit voice.utterance_in and voice.utterance_out trace
-events with payload {text, turn, mode}. The mode field tells the
-grader which transport was in use. Same trace shape = identical
-downstream analysis.
+Ключевая защитная часть — `voice_mode_falls_back_when_no_speechmatics_key`.
+Если ключа нет, pipeline не падает, а сам мягко переключается в
+text-режим и пишет в трассу `voice_unavailable` с причиной. Это
+важно для прохождения CI без секретов и для меня лично — у меня
+дома нет PortAudio под WSL, и отсутствие fallback'а превратило бы
+половину тестов в красные.
 
-The ManagerPersona class holds a conversation history list and calls
-an LLM for each turn. It's deterministic given identical history +
-model seed, which makes the tests stable even though we talk to a
-real model.
-
-## Citations
-
-- starter/voice_pipeline/voice_loop.py — run_voice_mode
-- starter/voice_pipeline/manager_persona.py — LLM-backed persona
+Что я наблюдал в text-mode: `_PLANNER_PROMPT` / `_EXECUTOR_PROMPT` из
+тика чата (форк `FabianTheFab`) реально помогают LLM не уходить в
+бесконечный диалог — без них на длинных бронях модель начинает
+переуточнять очевидное (по тому же эффекту, что в `make ex5-real`).
+В голосовом сценарии это особенно видно, потому что каждая лишняя
+реплика менеджера = дополнительный TTS-вызов и реальная задержка для
+пользователя — то есть «болтливость» здесь не косметика, а прямой
+UX-bug. По шкале CI text-режим даёт максимум 16/20; полные 20/20
+доступны только с реальными STT/TTS-ключами, и это сознательный
+trade-off с моей стороны.
