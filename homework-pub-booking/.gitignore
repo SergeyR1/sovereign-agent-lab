@@ -1,0 +1,72 @@
+# ── Secrets ──────────────────────────────────────────────────────────
+# NEVER commit .env — it has your API keys.
+.env
+.env.local
+.env.*.local
+
+# ── Session artifacts ────────────────────────────────────────────────
+# Sessions contain API output and should not be committed.
+sessions/
+demo_sessions_*/
+*.session.json
+
+# ── Python standard ──────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env.bak/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.tox/
+*.egg-info/
+build/
+dist/
+.coverage
+htmlcov/
+
+# ── Rasa ─────────────────────────────────────────────────────────────
+# Generated models, should not be in source control.
+rasa_project/models/
+rasa_project/.rasa/
+rasa_project/results/
+
+# ── OS ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Editors ──────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*~
+
+# ── Answers held locally but not submitted ───────────────────────────
+# If you keep working notes, put them under answers-local/ instead.
+answers-local/
+
+# ── Uploads for grader ───────────────────────────────────────────────
+# The grader's private tests are materialised here at CI time.
+# They should never be checked in by students.
+tests/private/*
+!tests/private/.gitkeep
+
+# ── uv ───────────────────────────────────────────────────────────────
+# uv.lock IS committed on purpose (reproducible installs). Do not add it here.
+
+# ── Educator solutions (NEVER COMMIT) ────────────────────────────────
+# The `solution/` directory contains reference implementations of every
+# exercise. It lives in the educator's private workspace only. Students
+# never see it.
+#
+# If you're a student looking at .gitignore: `solution/` does not exist
+# in the public repo. We generate it on the educator's machine from a
+# sibling private repo (homework-pub-booking-solutions) that isn't open.
+solution/
+educator/_scratch/
